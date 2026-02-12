@@ -1,4 +1,6 @@
 import Image from "next/image";
+import { CTAButton } from "@/_components/CTAButton";
+import { NonCTAButton } from "@/_components/NonCTAButton";
 
 export default function Home() {
 	return (
@@ -34,11 +36,11 @@ export default function Home() {
 					</p>
 				</div>
 				<div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-					<a
-						className="flex h-12 w-full items-center justify-center gap-2 rounded-md bg-primary px-5 text-primary-foreground transition-colors hover:bg-primary/90 md:w-[158px] border border-border"
+					<CTAButton
 						href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
 						target="_blank"
 						rel="noopener noreferrer"
+						className="w-full md:w-[158px] h-12 gap-2"
 					>
 						<Image
 							src="/vercel.svg"
@@ -48,15 +50,15 @@ export default function Home() {
 							className="invert"
 						/>
 						Deploy Now
-					</a>
-					<a
-						className="flex h-12 w-full items-center justify-center rounded-md border border-neutral-300 px-5 transition-colors hover:bg-muted md:w-[158px]"
+					</CTAButton>
+					<NonCTAButton
 						href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
 						target="_blank"
 						rel="noopener noreferrer"
+						className="w-full md:w-[158px] h-12"
 					>
 						Documentation
-					</a>
+					</NonCTAButton>
 				</div>
 			</main>
 		</div>

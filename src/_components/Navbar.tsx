@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { NavbarContent } from '../_content/types';
 
+import { CTAButton } from './CTAButton';
+
 interface NavbarProps {
 	content: NavbarContent;
 }
@@ -45,12 +47,9 @@ export function Navbar({ content }: NavbarProps) {
 
 				{/* CTA and Mobile Toggle */}
 				<div className="flex items-center gap-4">
-					<Link
-						href={content.cta.href}
-						className="hidden md:inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground border border-primary transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-					>
+					<CTAButton href={content.cta.href} className="hidden md:inline-flex h-9">
 						{content.cta.label}
-					</Link>
+					</CTAButton>
 
 					{/* Mobile Menu Trigger */}
 					<button
@@ -117,13 +116,13 @@ export function Navbar({ content }: NavbarProps) {
 							);
 						})}
 						<div className="pt-4 mt-2 border-t">
-							<Link
+							<CTAButton
 								href={content.cta.href}
-								className="flex h-10 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground border border-primary transition-colors hover:bg-muted hover:text-foreground"
+								className="w-full"
 								onClick={() => setIsOpen(false)}
 							>
 								{content.cta.label}
-							</Link>
+							</CTAButton>
 						</div>
 					</div>
 				</div>
