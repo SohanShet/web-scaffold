@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { CTAButton } from "@/_components/CTAButton";
-import { NonCTAButton } from "@/_components/NonCTAButton";
+import { CTAButton } from "@/_components/custom-buttons/CTAButton";
+import { NonCTAButton } from "@/_components/custom-buttons/NonCTAButton";
 
 export default function Home() {
 	return (

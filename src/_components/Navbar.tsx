@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { NavbarContent } from '../_content/types';
 
-import { CTAButton } from './CTAButton';
+import { CTAButton } from './custom-buttons/CTAButton';
 
 interface NavbarProps {
 	content: NavbarContent;

@@ -1,7 +1,7 @@
-import { CTAButton } from "@/_components/CTAButton";
-import { NonCTAButton } from "@/_components/NonCTAButton";
-import { ContactUsButton } from "@/_components/ContactUsButton";
-import { BackButton } from "@/_components/BackButton";
+import { CTAButton } from "@/_components/custom-buttons/CTAButton";
+import { NonCTAButton } from "@/_components/custom-buttons/NonCTAButton";
+import { ContactUsButton } from "@/_components/custom-buttons/ContactUsButton";
+import { BackButton } from "@/_components/custom-buttons/BackButton";
 
 export default function ButtonsDemo() {
 	return (
