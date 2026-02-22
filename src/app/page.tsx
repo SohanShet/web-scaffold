@@ -65,7 +65,7 @@ export default function Home() {
 				</div>
 			</main> */}
 
-			<section className="w-full py-12 px-10" id="blogs">
+			<section className="w-full py-12 md:px-10 px-3" id="blogs">
 				<BlogCarousel
 					blogs={blogs}
 					title="Latest Blogs"

@@ -34,35 +34,46 @@ export function BlogCarousel({
 		<section className={`w-full py-12 ${className ?? ""}`}>
 			<div className="max-w-7xl mx-auto px-4">
 
-				{(title || description) && (
-					<div className="mb-6">
-						{title && (
-							<h2 className="text-2xl md:text-3xl font-semibold">
-								{title}
-							</h2>
+				<Carousel
+					className="w-full"
+					opts={{
+						align: "start",
+						loop: true,
+					}}
+				>
+					<div className="flex items-center justify-between mb-6">
+						{(title || description) && (
+							<div>
+								{title && (
+									<h2 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
+										{title}
+									</h2>
+								)}
+								{description && (
+									<p className="text-muted-foreground mt-1 max-w-2xl">
+										{description}
+									</p>
+								)}
+							</div>
 						)}
-						{description && (
-							<p className="text-muted-foreground mt-1">
-								{description}
-							</p>
-						)}
+						<div className="flex items-center gap-2 ml-auto">
+							<CarouselPrevious className="static translate-y-0" />
+							<CarouselNext className="static translate-y-0" />
+						</div>
 					</div>
-				)}
 
-				<Carousel className="w-full">
-					<CarouselContent>
+					<CarouselContent className="-ml-4">
 						{blogs.map((blog) => (
 							<CarouselItem
 								key={blog.id}
-								className="basis-full sm:basis-1/2 lg:basis-1/3"
+								className="pl-4 basis-[85%] sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
 							>
-								<BlogCard blog={blog} />
+								<div className="h-full py-1">
+									<BlogCard blog={blog} />
+								</div>
 							</CarouselItem>
 						))}
 					</CarouselContent>
-
-					<CarouselPrevious />
-					<CarouselNext />
 				</Carousel>
 			</div>
 		</section>

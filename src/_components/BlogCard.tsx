@@ -31,7 +31,7 @@ export function BlogCard({ blog, featured = false }: BlogCardProps) {
 			</div>
 
 			<div className={`flex flex-col flex-1 p-6 ${featured ? 'justify-center md:p-10' : ''}`}>
-				<div className="flex items-center gap-4 text-xs text-muted-foreground mb-3">
+				<div className="flex items-center gap-4 text-xs hidden md:flex text-muted-foreground mb-3">
 					<div className="flex items-center gap-1">
 						<Calendar className="w-3.5 h-3.5" />
 						<span>{blog.date}</span>
@@ -50,7 +50,7 @@ export function BlogCard({ blog, featured = false }: BlogCardProps) {
 					{blog.excerpt}
 				</p>
 
-				<div className="mt-auto flex items-center justify-between">
+				<div className="mt-auto flex items-center hidden md:flex justify-between">
 					<div className="flex items-center gap-2">
 						<div className="relative w-8 h-8 rounded-full overflow-hidden border border-border">
 							{/* <Image
