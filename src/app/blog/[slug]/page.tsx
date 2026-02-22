@@ -11,9 +11,11 @@ import {
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
-import { getBlogBySlug, getRelatedBlogs } from "../../../_content/blogs";
+import { getAllBlogs, getBlogBySlug, getRelatedBlogs } from "../../../_content/blogs";
 import { ScrollToTop } from "../../../_components/ScrollToTop";
 import { BlogCard } from "../../../_components/BlogCard";
+import { BlogCarousel } from "@/_components/BlogCarousel";
+
 
 interface BlogPageProps {
 	params: {
@@ -24,6 +26,8 @@ interface BlogPageProps {
 export default async function BlogPage({ params }: BlogPageProps) {
 	const { slug } = await params;
 	const blog = await getBlogBySlug(slug);
+
+	const gt5 = getAllBlogs().slice(0, 5);
 
 	if (!blog) return notFound();
 
@@ -117,24 +121,13 @@ export default async function BlogPage({ params }: BlogPageProps) {
 					</div>
 				</div>
 
-				{/* Related Blogs */}
-				{relatedBlogs.length > 0 && (
-					<div>
-						<h2 className="text-2xl font-semibold mb-6">
-							Related Articles
-						</h2>
-						<div className="flex flex-wrap gap-8">
-							{relatedBlogs.map((related) => (
-								<div
-									key={related.id}
-									className="w-full md:w-[calc(50%-1rem)]"
-								>
-									<BlogCard blog={related} />
-								</div>
-							))}
-						</div>
-					</div>
-				)}
+
+
+				<BlogCarousel
+					blogs={relatedBlogs}
+					title="Related Blogs"
+					description="Check out our latest blog posts."
+				/>
 			</div>
 
 			{/* Scroll To Top */}

@@ -1,11 +1,14 @@
 import Image from "next/image";
 import { CTAButton } from "@/_components/custom-buttons/CTAButton";
 import { NonCTAButton } from "@/_components/custom-buttons/NonCTAButton";
+import { BlogCarousel } from "@/_components/BlogCarousel";
+import { getAllBlogs } from "@/_content/blogs";
 
 export default function Home() {
+	const blogs = getAllBlogs().slice(0, 5);
 	return (
 		<div className="flex min-h-screen items-center justify-center bg-muted/30 font-sans">
-			<main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-background sm:items-start border-x border-border">
+			{/* <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-background sm:items-start border-x border-border">
 				<Image
 					src="/next.svg"
 					alt="Next.js logo"
@@ -60,7 +63,15 @@ export default function Home() {
 						Documentation
 					</NonCTAButton>
 				</div>
-			</main>
+			</main> */}
+
+			<section className="w-full py-12 px-10" id="blogs">
+				<BlogCarousel
+					blogs={blogs}
+					title="Latest Blogs"
+					description="Check out our latest blog posts."
+				/>
+			</section>
 		</div>
 	);
 }
