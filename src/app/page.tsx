@@ -3,11 +3,20 @@ import { CTAButton } from "@/_components/custom-buttons/CTAButton";
 import { NonCTAButton } from "@/_components/custom-buttons/NonCTAButton";
 import { BlogCarousel } from "@/_components/BlogCarousel";
 import { getAllBlogs } from "@/_content/blogs";
+import { Metadata } from "next";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { getWebsiteSchema } from "@/lib/structured-data";
+
+export const metadata: Metadata = {
+	title: "Web Scaffold - Modern Next.js Boilerplate",
+	description: "The ultimate starting point for your next web project with premium SEO and performance.",
+};
 
 export default function Home() {
 	const blogs = getAllBlogs().slice(0, 5);
 	return (
 		<div className="flex min-h-screen items-center justify-center bg-muted/30 font-sans">
+			<JsonLd data={getWebsiteSchema()} />
 			{/* <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-background sm:items-start border-x border-border">
 				<Image
 					src="/next.svg"

@@ -4,6 +4,9 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
 	title: "Contact Us | Web Scaffold",
 	description: "Get in touch with us to start your next project.",
+	alternates: {
+		canonical: "/contact",
+	},
 };
 
 export default function ContactPage() {

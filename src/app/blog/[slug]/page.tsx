@@ -17,9 +17,44 @@ import { BlogCard } from "../../../_components/BlogCard";
 import { BlogCarousel } from "@/_components/BlogCarousel";
 
 
+import { Metadata } from "next";
+import { JsonLd } from "@/components/seo/JsonLd";
+
 interface BlogPageProps {
-	params: {
+	params: Promise<{
 		slug: string;
+	}>;
+}
+
+export async function generateMetadata({ params }: BlogPageProps): Promise<Metadata> {
+	const { slug } = await params;
+	const blog = await getBlogBySlug(slug);
+
+	if (!blog) return {};
+
+	const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://webscaffold.com";
+
+	return {
+		title: blog.title,
+		description: blog.excerpt,
+		openGraph: {
+			title: blog.title,
+			description: blog.excerpt,
+			images: [blog.imageUrl],
+			type: "article",
+			publishedTime: new Date(blog.date).toISOString(),
+			authors: [blog.author.name],
+			tags: blog.tags,
+		},
+		twitter: {
+			card: "summary_large_image",
+			title: blog.title,
+			description: blog.excerpt,
+			images: [blog.imageUrl],
+		},
+		alternates: {
+			canonical: `${baseUrl}/blog/${blog.slug}`,
+		},
 	};
 }
 
@@ -27,14 +62,26 @@ export default async function BlogPage({ params }: BlogPageProps) {
 	const { slug } = await params;
 	const blog = await getBlogBySlug(slug);
 
-	const gt5 = getAllBlogs().slice(0, 5);
-
 	if (!blog) return notFound();
 
 	const relatedBlogs = await getRelatedBlogs(blog.slug, blog.category);
 
+	const blogSchema = {
+		"@context": "https://schema.org",
+		"@type": "BlogPosting",
+		headline: blog.title,
+		description: blog.excerpt,
+		image: blog.imageUrl,
+		datePublished: new Date(blog.date).toISOString(),
+		author: {
+			"@type": "Person",
+			name: blog.author.name,
+		},
+	};
+
 	return (
 		<div className="w-full py-12">
+			<JsonLd data={blogSchema} />
 			<div className="max-w-4xl mx-auto px-4">
 
 				{/* Breadcrumb */}
