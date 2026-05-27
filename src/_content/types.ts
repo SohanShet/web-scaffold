@@ -51,6 +51,8 @@ export interface Blog {
 	excerpt: string;
 	content: string;
 	author: Author;
+	publishedAt?: string;
+	updatedAt?: string;
 	date: string;
 	category: BlogCategory;
 	tags: string[];

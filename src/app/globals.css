@@ -130,3 +130,133 @@ body {
     @apply bg-background text-foreground;
 	}
 }
+
+.mdx-content {
+	color: var(--foreground);
+	line-height: 1.8;
+}
+
+.mdx-content > * + * {
+	margin-top: 1.25rem;
+}
+
+.mdx-content h1,
+.mdx-content h2,
+.mdx-content h3,
+.mdx-content h4 {
+	color: var(--foreground);
+	font-weight: 700;
+	line-height: 1.2;
+	letter-spacing: -0.02em;
+	margin-top: 2.25rem;
+	margin-bottom: 0.75rem;
+}
+
+.mdx-content h1 {
+	font-size: 2rem;
+}
+
+.mdx-content h2 {
+	font-size: 1.5rem;
+}
+
+.mdx-content h3 {
+	font-size: 1.25rem;
+}
+
+.mdx-content p,
+.mdx-content li,
+.mdx-content blockquote {
+	color: color-mix(in oklab, var(--foreground) 78%, white 22%);
+}
+
+.mdx-content a {
+	color: var(--foreground);
+	text-decoration: underline;
+	text-underline-offset: 0.2em;
+}
+
+.mdx-content ul,
+.mdx-content ol {
+	padding-left: 1.5rem;
+}
+
+.mdx-content ul {
+	list-style: disc;
+}
+
+.mdx-content ol {
+	list-style: decimal;
+}
+
+.mdx-content li + li {
+	margin-top: 0.5rem;
+}
+
+.mdx-content blockquote {
+	border-left: 3px solid var(--border);
+	padding-left: 1rem;
+	font-style: italic;
+}
+
+.mdx-content :not(pre) > code {
+	background: var(--muted);
+	border: 1px solid var(--border);
+	border-radius: 0.4rem;
+	padding: 0.15rem 0.4rem;
+	font-size: 0.9em;
+}
+
+.mdx-pre {
+	background: color-mix(in oklab, var(--muted) 75%, black 25%);
+	color: var(--foreground);
+	border: 1px solid var(--border);
+	border-radius: 1rem;
+	padding: 1rem 1.25rem;
+	overflow-x: auto;
+	font-size: 0.95rem;
+	line-height: 1.7;
+}
+
+.mdx-pre code {
+	background: transparent;
+	border: 0;
+	padding: 0;
+}
+
+.mdx-table-wrapper {
+	width: 100%;
+	overflow-x: auto;
+	border: 1px solid var(--border);
+	border-radius: 1rem;
+}
+
+.mdx-content table {
+	width: 100%;
+	min-width: 36rem;
+	border-collapse: collapse;
+	background: var(--background);
+}
+
+.mdx-content thead {
+	background: var(--muted);
+}
+
+.mdx-content th,
+.mdx-content td {
+	border-bottom: 1px solid var(--border);
+	padding: 0.85rem 1rem;
+	text-align: left;
+	vertical-align: top;
+}
+
+.mdx-content th {
+	color: var(--foreground);
+	font-weight: 600;
+}
+
+.mdx-content hr {
+	border: 0;
+	border-top: 1px solid var(--border);
+	margin: 2rem 0;
+}

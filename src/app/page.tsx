@@ -1,7 +1,3 @@
-import Image from "next/image";
-import { CTAButton } from "@/_components/custom-buttons/CTAButton";
-import { NonCTAButton } from "@/_components/custom-buttons/NonCTAButton";
-import { BlogCarousel } from "@/_components/BlogCarousel";
 import { getAllBlogs } from "@/_content/blogs";
 import { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
