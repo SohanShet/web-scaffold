@@ -1,36 +1,138 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Web Scaffold
+
+A reusable Next.js starter project built around a simple idea:
+
+Most web projects start with the same foundation — navigation, landing pages, SEO setup, content pages, reusable UI components, and eventually a blog.
+
+After rebuilding these pieces across multiple projects, I started collecting the patterns that appeared repeatedly. Web Scaffold packages those foundations into a structured starting point so developers can spend less time on setup and more time building product-specific features.
+
+The goal is not to generate an entire application. Instead, it provides a clean, extensible foundation that can grow alongside a project.
+
+## Why Web Scaffold?
+
+Many projects launch with only a few pages, but requirements tend to expand over time:
+
+* Blog content
+* SEO improvements
+* Content management
+* Search engine visibility
+* Analytics integrations
+
+Adding these later often requires restructuring parts of the codebase.
+
+Web Scaffold includes these foundations from the beginning so they're available when needed, without getting in the way of smaller projects.
+
+## Features
+
+### Content Layer
+
+* Centralized content architecture
+* CMS-agnostic structure
+* Reusable navigation and footer content
+* Easy migration to a CMS later
+
+### Blog Infrastructure
+
+* MDX-powered blogs
+* Dynamic routing
+* Blog listing pages
+* SEO-friendly URLs
+
+### SEO Foundation
+
+* Metadata utilities
+* Sitemap generation
+* Robots.txt generation
+* Structured data helpers
+
+### Shared UI Components
+
+* Navigation
+* Footer
+* Buttons
+* Breadcrumbs
+* Carousels
+* Section wrappers
+
+### Project Structure
+
+* Predictable folder organization
+* Clear separation of concerns
+* Easy contributor onboarding
+
+## Project Structure
+
+```text
+app/
+components/
+_components/
+_content/
+lib/
+```
+
+The structure prioritizes convention and consistency so developers and AI coding tools can quickly understand how the project is organized.
+
+## Design Principles
+
+### Single Source of Truth for Content
+
+Content is separated from UI components to avoid duplication across the application.
+
+```text
+_content/
+├── navbar.ts
+├── footer.ts
+├── blogs/
+└── types.ts
+```
+
+This makes content easier to maintain and simplifies future CMS integrations.
+
+### Reusable Building Blocks
+
+Common UI patterns are included as reusable components so new projects can focus on product-specific functionality rather than rebuilding the same foundations repeatedly.
+
+### Future-Friendly Architecture
+
+Blog and SEO infrastructure are included from the start, even when not immediately required, reducing future migration and refactoring effort.
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repository-url>
+
+cd web-scaffold
+
+pnpm install
+
+pnpm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000 to view the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Roadmap
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Planned improvements include:
 
-## Learn More
+* Global loading system
+* Route groups
+* Backend starter structure
+* API abstraction layer
+* AI context / skill files
+* Environment validation
+* Error boundaries
+* Empty state components
+* Analytics integration points
+* Additional SEO utilities
 
-To learn more about Next.js, take a look at the following resources:
+## Status
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Web Scaffold is an active and ongoing project.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The current version focuses on the foundations most commonly reused across web projects, while future updates will continue improving developer experience, content workflows, and AI-assisted development support.
 
-## Deploy on Vercel
+## Contributing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Issues, suggestions, and pull requests are welcome.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+If you've encountered a recurring pattern that belongs in a reusable web starter, feel free to open a discussion.

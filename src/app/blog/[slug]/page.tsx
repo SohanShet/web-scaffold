@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
+import { MDXRemote } from "next-mdx-remote/rsc";
+import remarkGfm from "remark-gfm";
 
 import {
 	Breadcrumb,
@@ -11,14 +12,20 @@ import {
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
-import { getAllBlogs, getBlogBySlug, getRelatedBlogs } from "../../../_content/blogs";
+import { getBlogBySlug, getBlogSlugs, getRelatedBlogs } from "../../../_content/blogs";
 import { ScrollToTop } from "../../../_components/ScrollToTop";
-import { BlogCard } from "../../../_components/BlogCard";
 import { BlogCarousel } from "@/_components/BlogCarousel";
 
 
 import { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { mdxComponents } from "@/components/seo/MdxContent";
+import { Pre } from '@/_components/blogComponents/Pre' // Adjust path to your Pre component
+
+// 1. Define your custom components mapping object
+const mdxComponentsCustom = {
+  pre: Pre, 
+}
 
 interface BlogPageProps {
 	params: Promise<{
@@ -26,13 +33,19 @@ interface BlogPageProps {
 	}>;
 }
 
+export async function generateStaticParams() {
+	return getBlogSlugs().map((slug) => ({ slug }));
+}
+
 export async function generateMetadata({ params }: BlogPageProps): Promise<Metadata> {
 	const { slug } = await params;
-	const blog = await getBlogBySlug(slug);
+	const blog = getBlogBySlug(slug);
 
 	if (!blog) return {};
 
 	const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://webscaffold.com";
+	const ogImage = `${baseUrl}/blog/${blog.slug}/opengraph-image`;
+	const publishedAt = blog.publishedAt ?? "";
 
 	return {
 		title: blog.title,
@@ -40,9 +53,9 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
 		openGraph: {
 			title: blog.title,
 			description: blog.excerpt,
-			images: [blog.imageUrl],
+			images: [ogImage],
 			type: "article",
-			publishedTime: new Date(blog.date).toISOString(),
+			publishedTime: new Date(publishedAt).toISOString(),
 			authors: [blog.author.name],
 			tags: blog.tags,
 		},
@@ -50,7 +63,7 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
 			card: "summary_large_image",
 			title: blog.title,
 			description: blog.excerpt,
-			images: [blog.imageUrl],
+			images: [ogImage],
 		},
 		alternates: {
 			canonical: `${baseUrl}/blog/${blog.slug}`,
@@ -60,19 +73,24 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
 
 export default async function BlogPage({ params }: BlogPageProps) {
 	const { slug } = await params;
-	const blog = await getBlogBySlug(slug);
+	const blog = getBlogBySlug(slug);
 
 	if (!blog) return notFound();
 
-	const relatedBlogs = await getRelatedBlogs(blog.slug, blog.category);
+	const relatedBlogs = getRelatedBlogs(blog.slug, blog.category);
+	const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://webscaffold.com";
+	const publishedAt = blog.publishedAt ?? "";
+	const updatedAt = blog.updatedAt ?? blog.publishedAt ?? "";
 
 	const blogSchema = {
 		"@context": "https://schema.org",
 		"@type": "BlogPosting",
 		headline: blog.title,
 		description: blog.excerpt,
-		image: blog.imageUrl,
-		datePublished: new Date(blog.date).toISOString(),
+		image: blog.imageUrl || `${baseUrl}/blog/${blog.slug}/opengraph-image`,
+		datePublished: new Date(publishedAt).toISOString(),
+		dateModified: new Date(updatedAt).toISOString(),
+		url: `${baseUrl}/blog/${blog.slug}`,
 		author: {
 			"@type": "Person",
 			name: blog.author.name,
@@ -80,9 +98,9 @@ export default async function BlogPage({ params }: BlogPageProps) {
 	};
 
 	return (
-		<div className="w-full py-12">
+		<div className="py-12 w-full">
 			<JsonLd data={blogSchema} />
-			<div className="max-w-4xl mx-auto px-4">
+			<div className="mx-auto px-4 max-w-4xl">
 
 				{/* Breadcrumb */}
 				<div className="mb-8">
@@ -96,7 +114,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
 							<BreadcrumbSeparator />
 							<BreadcrumbItem>
 								<BreadcrumbLink asChild>
-									<Link href="/blogs">Blogs</Link>
+									<Link href="/blog">Blog</Link>
 								</BreadcrumbLink>
 							</BreadcrumbItem>
 							<BreadcrumbSeparator />
@@ -108,12 +126,12 @@ export default async function BlogPage({ params }: BlogPageProps) {
 				</div>
 
 				{/* Title */}
-				<h1 className="text-3xl md:text-4xl font-bold mb-6 leading-tight">
+				<h1 className="mb-6 font-bold text-3xl md:text-4xl leading-tight">
 					{blog.title}
 				</h1>
 
 				{/* Meta Info */}
-				<div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground mb-8">
+				<div className="flex flex-wrap items-center gap-6 mb-8 text-muted-foreground text-sm">
 					<span>{blog.date}</span>
 					<span>{blog.readTime}</span>
 					<span className="font-medium text-foreground">
@@ -122,7 +140,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
 				</div>
 
 				{/* Featured Image */}
-				<div className="relative w-full h-[350px] md:h-[450px] rounded-xl overflow-hidden mb-10">
+				<div className="relative mb-10 rounded-xl w-full h-[350px] md:h-[450px] overflow-hidden">
 					{/* <Image
 						src={blog.imageUrl}
 						alt={blog.title}
@@ -133,17 +151,24 @@ export default async function BlogPage({ params }: BlogPageProps) {
 				</div>
 
 				{/* Blog Content */}
-				<article
-					className="prose prose-neutral dark:prose-invert max-w-none mb-12"
-					dangerouslySetInnerHTML={{ __html: blog.content }}
-				/>
+				<article className="dark:prose-invert mb-12 max-w-none prose mdx-content">
+					<MDXRemote
+						source={blog.content}
+						components={mdxComponentsCustom}
+						options={{
+							mdxOptions: {
+								remarkPlugins: [remarkGfm],
+							},
+						}}
+					/>
+				</article>
 
 				{/* Tags */}
 				<div className="flex flex-wrap gap-3 mb-12">
 					{blog.tags.map((tag) => (
 						<span
 							key={tag}
-							className="text-xs px-3 py-1 rounded-full bg-muted border border-border"
+							className="bg-muted px-3 py-1 border border-border rounded-full text-xs"
 						>
 							{tag}
 						</span>
@@ -151,8 +176,8 @@ export default async function BlogPage({ params }: BlogPageProps) {
 				</div>
 
 				{/* Author Box */}
-				<div className="flex items-center gap-4 p-6 border border-border rounded-xl mb-16">
-					<div className="relative w-14 h-14 rounded-full overflow-hidden">
+				<div className="flex items-center gap-4 mb-16 p-6 border border-border rounded-xl">
+					<div className="relative rounded-full w-14 h-14 overflow-hidden">
 						{/* <Image
 							src={blog.author.avatar}
 							alt={blog.author.name}
@@ -162,7 +187,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
 					</div>
 					<div>
 						<p className="font-semibold">{blog.author.name}</p>
-						<p className="text-sm text-muted-foreground">
+						<p className="text-muted-foreground text-sm">
 							{blog.author.role}
 						</p>
 					</div>
