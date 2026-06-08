@@ -20,6 +20,12 @@ import { BlogCarousel } from "@/_components/BlogCarousel";
 import { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { mdxComponents } from "@/components/seo/MdxContent";
+import { Pre } from '@/_components/blogComponents/Pre' // Adjust path to your Pre component
+
+// 1. Define your custom components mapping object
+const mdxComponentsCustom = {
+  pre: Pre, 
+}
 
 interface BlogPageProps {
 	params: Promise<{
@@ -145,10 +151,10 @@ export default async function BlogPage({ params }: BlogPageProps) {
 				</div>
 
 				{/* Blog Content */}
-				<article className="mdx-content mb-12 max-w-none">
+				<article className="dark:prose-invert mb-12 max-w-none prose mdx-content">
 					<MDXRemote
 						source={blog.content}
-						components={mdxComponents}
+						components={mdxComponentsCustom}
 						options={{
 							mdxOptions: {
 								remarkPlugins: [remarkGfm],
