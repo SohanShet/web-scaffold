@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { NavbarContent } from '../_content/types';
 
 import { CTAButton } from './custom-buttons/CTAButton';
+import GlobalLoadingIndicator from '@/components/feedback/GlobalLoadingIndicator';
 
 interface NavbarProps {
 	content: NavbarContent;
@@ -127,6 +128,7 @@ export function Navbar({ content }: NavbarProps) {
 					</div>
 				</div>
 			)}
+			<GlobalLoadingIndicator />
 		</nav>
 	);
 }

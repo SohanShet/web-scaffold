@@ -21,6 +21,8 @@ import { getOrganizationSchema } from "@/lib/structured-data";
 
 export const metadata = defaultSEO;
 
+import { LoadingProvider } from "@/providers/LoadingProvider";
+
 export default function RootLayout({
 	children,
 }: Readonly<{
@@ -31,12 +33,14 @@ export default function RootLayout({
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
 			>
-				<JsonLd data={getOrganizationSchema()} />
-				<Navbar content={navbarContent} />
-				<main className="flex-1">
-					{children}
-				</main>
-				<Footer content={footerContent} />
+				<LoadingProvider>
+					<JsonLd data={getOrganizationSchema()} />
+					<Navbar content={navbarContent} />
+					<main className="flex-1">
+						{children}
+					</main>
+					<Footer content={footerContent} />
+				</LoadingProvider>
 			</body>
 		</html>
 	);

@@ -6,7 +6,6 @@ export const footerContent: FooterContent = {
 			title: 'Product',
 			links: [
 				{ label: 'Features', href: '/features' },
-				{ label: 'Pricing', href: '/pricing' },
 				{ label: 'Integrations', href: '/integrations' },
 				{ label: 'Changelog', href: '/changelog' },
 			],

@@ -1,9 +1,20 @@
+"use client";
+
 import { CTAButton } from "@/_components/custom-buttons/CTAButton";
 import { NonCTAButton } from "@/_components/custom-buttons/NonCTAButton";
 import { ContactUsButton } from "@/_components/custom-buttons/ContactUsButton";
 import { BackButton } from "@/_components/custom-buttons/BackButton";
+import { useLoading } from "@/hooks/useLoading";
 
 export default function ButtonsDemo() {
+	const { withLoading } = useLoading();
+
+	const handleDemoLoading = async () => {
+		await withLoading(async () => {
+			await new Promise((resolve) => setTimeout(resolve, 3000));
+		});
+	};
+
 	return (
 		<div className="container mx-auto py-20 px-4">
 			<BackButton href="/" className="mb-8" />
@@ -43,6 +54,15 @@ export default function ButtonsDemo() {
 					<div className="flex flex-wrap gap-4 items-center">
 						<BackButton>Go Back</BackButton>
 						<BackButton href="/about">Back to About</BackButton>
+					</div>
+				</section>
+
+				<section>
+					<h2 className="text-xl font-semibold mb-4">Global Loading</h2>
+					<div className="flex flex-wrap gap-4 items-center">
+						<CTAButton onClick={handleDemoLoading}>
+							Trigger Loading (3s)
+						</CTAButton>
 					</div>
 				</section>
 			</div>
