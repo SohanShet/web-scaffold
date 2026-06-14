@@ -8,7 +8,7 @@ export const defaultSEO: Metadata = {
 		default: "Web Scaffold - Modern Next.js Boilerplate",
 		template: "%s | Web Scaffold",
 	},
-	description: "A premium Next.js scaffold with SEO, performance, and modern design out of the box.",
+	description: "A Next.js scaffold with SEO, performance, and modern design out of the box.",
 	keywords: ["Next.js", "React", "Tailwind CSS", "SEO", "Web Development", "Scaffold", "Boilerplate"],
 	authors: [{ name: "Sohan Shet" }],
 	creator: "Sohan Shet",
@@ -18,7 +18,7 @@ export const defaultSEO: Metadata = {
 		url: baseUrl,
 		siteName: "Web Scaffold",
 		title: "Web Scaffold - Modern Next.js Boilerplate",
-		description: "A premium Next.js scaffold with SEO, performance, and modern design out of the box.",
+		description: "A Next.js scaffold with SEO, performance, and modern design out of the box.",
 		images: [
 			{
 				url: `${baseUrl}/og-image.png`,
@@ -31,7 +31,7 @@ export const defaultSEO: Metadata = {
 	twitter: {
 		card: "summary_large_image",
 		title: "Web Scaffold - Modern Next.js Boilerplate",
-		description: "A premium Next.js scaffold with SEO, performance, and modern design out of the box.",
+		description: "A Next.js scaffold with SEO, performance, and modern design out of the box.",
 		images: [`${baseUrl}/og-image.png`],
 		creator: "@sohanshet",
 	},

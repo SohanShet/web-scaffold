@@ -12,8 +12,8 @@ import {
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
-import { getBlogBySlug, getBlogSlugs, getRelatedBlogs } from "../../../_content/blogs";
-import { ScrollToTop } from "../../../_components/ScrollToTop";
+import { getBlogBySlug, getBlogSlugs, getRelatedBlogs } from "@/_content/blogs";
+import { ScrollToTop } from "@/_components/ScrollToTop";
 import { BlogCarousel } from "@/_components/BlogCarousel";
 
 
@@ -24,7 +24,7 @@ import { Pre } from '@/_components/blogComponents/Pre' // Adjust path to your Pr
 
 // 1. Define your custom components mapping object
 const mdxComponentsCustom = {
-  pre: Pre, 
+	pre: Pre,
 }
 
 interface BlogPageProps {

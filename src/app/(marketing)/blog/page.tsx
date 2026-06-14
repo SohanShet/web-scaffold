@@ -1,6 +1,6 @@
 import React from "react";
-import { getAllBlogs } from "../../_content/blogs";
-import { BlogCard } from "../../_components/BlogCard";
+import { getAllBlogs } from "@/_content/blogs";
+import { BlogCard } from "@/_components/BlogCard";
 
 export default function AllBlogsPage() {
 	const blogs = getAllBlogs();
