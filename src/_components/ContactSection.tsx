@@ -1,9 +1,49 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { CTAButton } from './custom-buttons/CTAButton';
 
+type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
+
 export function ContactSection() {
+	const [status, setStatus] = useState<FormStatus>('idle');
+	const [errorMessage, setErrorMessage] = useState('');
+
+	async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+		event.preventDefault();
+		setStatus('submitting');
+		setErrorMessage('');
+
+		const form = event.currentTarget;
+		const formData = new FormData(form);
+
+		try {
+			const response = await fetch('/api/contact', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					name: formData.get('name'),
+					email: formData.get('email'),
+					subject: formData.get('subject'),
+					message: formData.get('message'),
+					company: formData.get('company'),
+				}),
+			});
+
+			const data = await response.json().catch(() => null);
+
+			if (!response.ok) {
+				throw new Error(data?.error ?? 'Something went wrong. Please try again.');
+			}
+
+			setStatus('success');
+			form.reset();
+		} catch (err) {
+			setStatus('error');
+			setErrorMessage(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+		}
+	}
+
 	return (
 		<section className="py-24 px-4 bg-muted/30 relative overflow-hidden">
 			{/* Decorative background elements */}
@@ -54,13 +94,15 @@ export function ContactSection() {
 						{/* Subtle hover glow */}
 						<div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl -z-10 blur-2xl pointer-events-none" />
 
-						<form className="flex flex-col gap-6" onSubmit={(e) => e.preventDefault()}>
+						<form className="flex flex-col gap-6" onSubmit={handleSubmit}>
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 								<div className="flex flex-col gap-2">
 									<label htmlFor="name" className="text-sm font-medium text-foreground">Full Name</label>
 									<input
 										type="text"
 										id="name"
+										name="name"
+										required
 										placeholder="John Doe"
 										className="h-12 px-4 rounded-lg bg-muted/50 border border-border focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-foreground"
 									/>
@@ -70,6 +112,8 @@ export function ContactSection() {
 									<input
 										type="email"
 										id="email"
+										name="email"
+										required
 										placeholder="john@example.com"
 										className="h-12 px-4 rounded-lg bg-muted/50 border border-border focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-foreground"
 									/>
@@ -81,6 +125,8 @@ export function ContactSection() {
 								<input
 									type="text"
 									id="subject"
+									name="subject"
+									required
 									placeholder="How can we help?"
 									className="h-12 px-4 rounded-lg bg-muted/50 border border-border focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-foreground"
 								/>
@@ -90,15 +136,48 @@ export function ContactSection() {
 								<label htmlFor="message" className="text-sm font-medium text-foreground">Message</label>
 								<textarea
 									id="message"
+									name="message"
+									required
 									rows={4}
 									placeholder="Tell us more about your project..."
 									className="p-4 rounded-lg bg-muted/50 border border-border focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-foreground resize-none"
 								></textarea>
 							</div>
 
-							<CTAButton className="w-full h-12 text-lg font-semibold mt-4 shadow-lg shadow-primary/20">
-								Send Message
+							{/* Honeypot: hidden from real users; bots that auto-fill forms tend to populate it */}
+							<div
+								className="absolute -left-[9999px] top-0 h-px w-px overflow-hidden"
+								aria-hidden="true"
+							>
+								<label htmlFor="company">Company</label>
+								<input
+									type="text"
+									id="company"
+									name="company"
+									tabIndex={-1}
+									autoComplete="off"
+								/>
+							</div>
+
+							<CTAButton
+								type="submit"
+								disabled={status === 'submitting'}
+								className="w-full h-12 text-lg font-semibold mt-4 shadow-lg shadow-primary/20"
+							>
+								{status === 'submitting' ? 'Sending...' : 'Send Message'}
 							</CTAButton>
+
+							{status === 'success' && (
+								<p className="text-sm text-center text-green-600" role="status">
+									Thanks! Your message has been sent.
+								</p>
+							)}
+
+							{status === 'error' && (
+								<p className="text-sm text-center text-destructive" role="alert">
+									{errorMessage}
+								</p>
+							)}
 
 							<p className="text-xs text-center text-muted-foreground mt-2">
 								By clicking send, you agree to our <span className="underline cursor-pointer hover:text-foreground">Privacy Policy</span>.
