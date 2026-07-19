@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Blog } from '../_content/types';
-import { Calendar, Clock, ArrowRight } from 'lucide-react';
+import { Calendar, Clock, ArrowRight, ImageOff, User } from 'lucide-react';
 
 interface BlogCardProps {
 	blog: Blog;
@@ -16,7 +16,7 @@ export function BlogCard({ blog, featured = false }: BlogCardProps) {
 			href={`/blog/${blog.slug}`}
 			className={`group flex flex-col h-full bg-background border border-border rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1 ${featured ? 'md:flex-row md:col-span-2 md:h-[400px]' : ''}`}
 		>
-			<div className={`relative overflow-hidden ${featured ? 'md:w-1/2 h-64 md:h-full' : 'h-52 w-full'}`}>
+			<div className={`relative overflow-hidden bg-muted flex items-center justify-center ${featured ? 'md:w-1/2 h-64 md:h-full' : 'h-52 w-full'}`}>
 				{/* <Image
 					src={blog.imageUrl}
 					alt={blog.title}
@@ -24,6 +24,7 @@ export function BlogCard({ blog, featured = false }: BlogCardProps) {
 					className="object-cover transition-transform duration-500 group-hover:scale-105"
 					sizes={featured ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"}
 				/> */}
+				<ImageOff className="w-8 h-8 text-muted-foreground/40" strokeWidth={1.5} />
 				<div className="absolute top-4 left-4 bg-background/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-foreground border border-border/50 shadow-sm">
 					{blog.category}
 				</div>
@@ -51,13 +52,14 @@ export function BlogCard({ blog, featured = false }: BlogCardProps) {
 
 				<div className="mt-auto flex items-center hidden md:flex justify-between">
 					<div className="flex items-center gap-2">
-						<div className="relative w-8 h-8 rounded-full overflow-hidden border border-border">
+						<div className="relative w-8 h-8 rounded-full overflow-hidden border border-border bg-muted flex items-center justify-center">
 							{/* <Image
 								src={blog.author.avatar}
 								alt={blog.author.name}
 								fill
 								className="object-cover"
 							/> */}
+							<User className="w-4 h-4 text-muted-foreground/50" strokeWidth={1.5} />
 						</div>
 						<span className="text-sm font-medium text-foreground">{blog.author.name}</span>
 					</div>

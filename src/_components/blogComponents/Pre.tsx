@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, ComponentPropsWithoutRef } from "react";
 
-export function Pre({ children, ...props }: any) {
+export function Pre({ children, ...props }: ComponentPropsWithoutRef<"pre">) {
   const preRef = useRef<HTMLPreElement>(null);
   const [copied, setCopied] = useState(false);
 
@@ -25,7 +25,11 @@ export function Pre({ children, ...props }: any) {
       >
         {copied ? "Copied!" : "Copy"}
       </button>
-      <pre ref={preRef} {...props}>
+      <pre
+        ref={preRef}
+        {...props}
+        className="bg-black text-gray-100 rounded-lg p-4 overflow-x-auto text-sm leading-relaxed"
+      >
         {children}
       </pre>
     </div>

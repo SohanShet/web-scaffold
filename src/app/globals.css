@@ -24,10 +24,11 @@ figure[data-rehype-pretty-code-figure],
 /* 2. Strip Tailwind's default gray/padding from the internal pre tag */
 figure[data-rehype-pretty-code-figure] pre,
 .prose pre {
-	background-color: transparent !important;
+	background-color: #000 !important;
 	color: inherit !important;
 	margin: 0 !important;
 	padding: 1.25rem !important;
+	border-radius: 0.5rem !important;
 	overflow-x: auto !important;
 }
 
@@ -37,8 +38,8 @@ figure[data-rehype-pretty-code-figure] code,
 	background-color: transparent !important;
 	padding: 0 !important;
 	border-radius: 0 !important;
-	color: #abb2bf !important;
-	/* Default light gray font color for One Dark Pro */
+	color: #e5e7eb !important;
+	/* Bright, high-contrast text against the black pre background */
 	font-family: monospace !important;
 }
 

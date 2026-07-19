@@ -15,6 +15,7 @@ import {
 import { getBlogBySlug, getBlogSlugs, getRelatedBlogs } from "@/_content/blogs";
 import { ScrollToTop } from "@/_components/ScrollToTop";
 import { BlogCarousel } from "@/_components/BlogCarousel";
+import { ImageOff, User } from "lucide-react";
 
 
 import { Metadata } from "next";
@@ -140,7 +141,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
 				</div>
 
 				{/* Featured Image */}
-				<div className="relative mb-10 rounded-xl w-full h-[350px] md:h-[450px] overflow-hidden">
+				<div className="relative flex justify-center items-center bg-muted mb-10 rounded-xl w-full h-[350px] md:h-[450px] overflow-hidden">
 					{/* <Image
 						src={blog.imageUrl}
 						alt={blog.title}
@@ -148,6 +149,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
 						className="object-cover"
 						sizes="100vw"
 					/> */}
+					<ImageOff className="w-12 h-12 text-muted-foreground/40" strokeWidth={1.5} />
 				</div>
 
 				{/* Blog Content */}
@@ -177,13 +179,14 @@ export default async function BlogPage({ params }: BlogPageProps) {
 
 				{/* Author Box */}
 				<div className="flex items-center gap-4 mb-16 p-6 border border-border rounded-xl">
-					<div className="relative rounded-full w-14 h-14 overflow-hidden">
+					<div className="relative flex justify-center items-center bg-muted rounded-full w-14 h-14 overflow-hidden">
 						{/* <Image
 							src={blog.author.avatar}
 							alt={blog.author.name}
 							fill
 							className="object-cover"
 						/> */}
+						<User className="w-6 h-6 text-muted-foreground/50" strokeWidth={1.5} />
 					</div>
 					<div>
 						<p className="font-semibold">{blog.author.name}</p>
@@ -192,15 +195,13 @@ export default async function BlogPage({ params }: BlogPageProps) {
 						</p>
 					</div>
 				</div>
-
-
-
-				<BlogCarousel
-					blogs={relatedBlogs}
-					title="Related Blogs"
-					description="Check out our latest blog posts."
-				/>
 			</div>
+
+			<BlogCarousel
+				blogs={relatedBlogs}
+				title="Related Blogs"
+				description="Check out our latest blog posts."
+			/>
 
 			{/* Scroll To Top */}
 			<ScrollToTop />
