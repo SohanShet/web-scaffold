@@ -31,9 +31,9 @@ export const footerContent: FooterContent = {
 		{
 			title: 'Legal',
 			links: [
-				{ label: 'Privacy', href: '/privacy' },
-				{ label: 'Terms', href: '/terms' },
-				{ label: 'Security', href: '/security' },
+				{ label: 'Privacy Policy', href: '/legal/privacy-policy' },
+				{ label: 'Terms of Service', href: '/legal/terms-of-service' },
+				{ label: 'Cookie Policy', href: '/legal/cookie-policy' },
 			],
 		},
 	],

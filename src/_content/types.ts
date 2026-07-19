@@ -36,6 +36,18 @@ export interface FooterContent {
 	}[];
 }
 
+export interface LegalSection {
+	title: string;
+	content: string[];
+}
+
+export interface LegalContent {
+	title: string;
+	lastUpdated: string;
+	disclaimer: string;
+	sections: LegalSection[];
+}
+
 export type BlogCategory = 'Technology' | 'Design' | 'Development' | 'Lifestyle' | 'Business';
 
 export interface Author {
