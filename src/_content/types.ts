@@ -48,6 +48,17 @@ export interface LegalContent {
 	sections: LegalSection[];
 }
 
+export interface FaqItem {
+	question: string;
+	answer: string;
+}
+
+export interface FaqContent {
+	title: string;
+	subtitle?: string;
+	items: FaqItem[];
+}
+
 export type BlogCategory = 'Technology' | 'Design' | 'Development' | 'Lifestyle' | 'Business';
 
 export interface Author {
