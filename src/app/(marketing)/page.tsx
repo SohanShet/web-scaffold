@@ -1,7 +1,9 @@
 import { getAllBlogs } from "@/_content/blogs";
 import { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { getWebsiteSchema } from "@/lib/structured-data";
+import { getWebsiteSchema, getFaqSchema } from "@/lib/structured-data";
+import { FaqSection } from "@/_components/FaqSection";
+import { faqContent } from "@/_content/faq";
 
 export const metadata: Metadata = {
 	title: "Web Scaffold - Modern Next.js Boilerplate",
@@ -21,12 +23,17 @@ export default function Home() {
 	})();
 
 	return (
-		<div className="flex min-h-screen flex-col items-center justify-center bg-muted/30 font-sans">
+		<div className="flex min-h-screen flex-col items-center bg-muted/30 font-sans">
 			<JsonLd data={getWebsiteSchema()} />
+			<JsonLd data={getFaqSchema(faqContent.items)} />
 
-			<Suspense fallback={<Loading />}>
-				<BlogListClient blogsPromise={blogsPromise} />
-			</Suspense>
+			<div className="flex w-full flex-1 flex-col items-center justify-center">
+				<Suspense fallback={<Loading />}>
+					<BlogListClient blogsPromise={blogsPromise} />
+				</Suspense>
+			</div>
+
+			<FaqSection content={faqContent} />
 		</div>
 	);
 }

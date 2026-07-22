@@ -52,7 +52,22 @@ Web Scaffold includes these foundations from the beginning so they're available 
 * Buttons
 * Breadcrumbs
 * Carousels
+* Accordion (used by the FAQ section)
 * Section wrappers
+
+### Pages & Sections
+
+* Marketing and admin route groups, each with their own layout
+* Contact page with a validated form (zod) and email delivery via Resend, including a spam honeypot
+* Legal pages — Privacy Policy, Terms of Service, Cookie Policy — driven by typed content
+* FAQ section with an accordion UI and FAQPage structured data
+
+### Reliability & DX
+
+* Runtime environment variable validation (zod schema in `src/env.ts`)
+* Global error boundary and not-found page
+* Empty state component for lists/pages with no data
+* Global loading system (context/provider + route-level `loading.tsx`) with a top progress indicator
 
 ### Project Structure
 
@@ -64,10 +79,15 @@ Web Scaffold includes these foundations from the beginning so they're available 
 
 ```text
 app/
-components/
-_components/
-_content/
+├── (marketing)/   # public site: layout, home, about, blog, contact, legal
+├── (admin)/       # admin route group (scaffolded, not yet built out)
+└── api/           # route handlers (e.g. contact form)
+components/        # generic/shared building blocks (ui, seo, feedback)
+_components/        # app-specific, content-aware components
+_content/           # typed content objects — the CMS-agnostic data layer
 lib/
+providers/
+hooks/
 ```
 
 The structure prioritizes convention and consistency so developers and AI coding tools can quickly understand how the project is organized.
@@ -82,6 +102,8 @@ Content is separated from UI components to avoid duplication across the applicat
 _content/
 ├── navbar.ts
 ├── footer.ts
+├── faq.ts
+├── legal/
 ├── blogs/
 └── types.ts
 ```
@@ -105,6 +127,9 @@ cd web-scaffold
 
 pnpm install
 
+cp .env.example .env.local
+# fill in NEXT_PUBLIC_SITE_URL, RESEND_API_KEY, CONTACT_EMAIL_TO, etc.
+
 pnpm run dev
 ```
 
@@ -114,16 +139,12 @@ Open http://localhost:3000 to view the application.
 
 Planned improvements include:
 
-* Global loading system
-* Route groups
 * Backend starter structure
 * API abstraction layer
 * AI context / skill files
-* Environment validation
-* Error boundaries
-* Empty state components
 * Analytics integration points
 * Additional SEO utilities
+* Admin/dashboard shell (route group currently scaffolded but empty)
 
 ## Status
 
