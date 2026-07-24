@@ -7,6 +7,7 @@ import { NavbarContent } from '../_content/types';
 
 import { CTAButton } from './custom-buttons/CTAButton';
 import GlobalLoadingIndicator from '@/components/feedback/GlobalLoadingIndicator';
+import { ThemeToggle } from '@/components/theme/ThemeToggle';
 
 interface NavbarProps {
 	content: NavbarContent;
@@ -47,7 +48,9 @@ export function Navbar({ content }: NavbarProps) {
 				</div>
 
 				{/* CTA and Mobile Toggle */}
-				<div className="flex items-center gap-4">
+				<div className="flex items-center gap-2">
+					<ThemeToggle />
+
 					<CTAButton href={content.cta.href} className="hidden md:inline-flex h-9">
 						{content.cta.label}
 					</CTAButton>
@@ -116,14 +119,15 @@ export function Navbar({ content }: NavbarProps) {
 								</Link>
 							);
 						})}
-						<div className="pt-4 mt-2 border-t">
+						<div className="pt-4 mt-2 border-t flex items-center justify-between gap-4">
 							<CTAButton
 								href={content.cta.href}
-								className="w-full"
+								className="flex-1"
 								onClick={() => setIsOpen(false)}
 							>
 								{content.cta.label}
 							</CTAButton>
+							<ThemeToggle />
 						</div>
 					</div>
 				</div>

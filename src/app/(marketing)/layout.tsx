@@ -22,6 +22,7 @@ import { getOrganizationSchema } from "@/lib/structured-data";
 export const metadata = defaultSEO;
 
 import { LoadingProvider } from "@/providers/LoadingProvider";
+import { ThemeProvider } from "@/providers/ThemeProvider";
 
 export default function RootLayout({
 	children,
@@ -29,18 +30,20 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
+		<html lang="en" suppressHydrationWarning>
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
 			>
-				<LoadingProvider>
-					<JsonLd data={getOrganizationSchema()} />
-					<Navbar content={navbarContent} />
-					<main className="flex-1">
-						{children}
-					</main>
-					<Footer content={footerContent} />
-				</LoadingProvider>
+				<ThemeProvider>
+					<LoadingProvider>
+						<JsonLd data={getOrganizationSchema()} />
+						<Navbar content={navbarContent} />
+						<main className="flex-1">
+							{children}
+						</main>
+						<Footer content={footerContent} />
+					</LoadingProvider>
+				</ThemeProvider>
 			</body>
 		</html>
 	);

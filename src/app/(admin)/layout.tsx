@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "@/app/globals.css";
 import type { Metadata } from "next";
+import { ThemeProvider } from "@/providers/ThemeProvider";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -26,11 +27,11 @@ export default function AdminLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
+		<html lang="en" suppressHydrationWarning>
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
 			>
-				{children}
+				<ThemeProvider>{children}</ThemeProvider>
 			</body>
 		</html>
 	);

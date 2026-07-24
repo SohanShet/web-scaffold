@@ -26,7 +26,7 @@ There is no test runner configured in this repo currently.
 
 There is **no `src/app/layout.tsx`**. The root layout (the one that renders `<html>`/`<body>`, wraps `LoadingProvider`, mounts `Navbar`/`Footer`, and sets `metadata = defaultSEO`) lives at `src/app/(marketing)/layout.tsx`. Global files that must live at the true app root regardless of route group (`global-error.tsx`, `not-found.tsx`, `loading.tsx`, `robots.ts`, `sitemap.ts`, `globals.css`, `favicon.ico`) sit directly in `src/app/`.
 
-The `(admin)` route group (`src/app/(admin)/admin/page.tsx`) currently has **no layout of its own** and the page file is empty — it's a stub for a future admin/dashboard shell, not a working route yet.
+The `(admin)` route group has its own root layout (`src/app/(admin)/layout.tsx`, no navbar/footer, its own `<html>`/`<body>`) — it does not inherit anything from `(marketing)`'s layout. `admin/page.tsx` is still an empty stub for a future dashboard shell; `login/page.tsx` is the only working route in the group so far.
 
 When adding a new top-level section that needs a different chrome (e.g. a dashboard without the marketing navbar/footer), give it its own route group with its own `layout.tsx` rather than assuming `src/app/(marketing)/layout.tsx` applies everywhere.
 
@@ -56,6 +56,15 @@ All copy/data lives here, decoupled from components, so it can later be swapped 
 ### Loading system
 
 `LoadingProvider` (`src/providers/LoadingProvider.tsx`) is a context wrapping the whole app in the root layout, tracking a `loadingCount` (supports overlapping loads) and exposing `isLoading`/`startLoading`/`stopLoading`/`withLoading`. `useLoading()` (`src/hooks/useLoading.ts`) reads it and throws if used outside the provider. This is for **client-side/manual** loading state (e.g. wrapping an async action with `withLoading`) — distinct from Next's route-level `loading.tsx` (`src/app/loading.tsx` → `Loading` component), which handles route transition suspense automatically. `GlobalLoadingIndicator` renders a top progress bar driven by the context.
+
+### Dark mode / theming
+
+Dark mode is powered by `next-themes` (class strategy, matching the pre-existing `.dark` CSS tokens in `globals.css`). All of it is driven from one config file so a downstream project can retheme without touching component code:
+
+- `src/lib/theme-config.ts` — the single knob to turn: `defaultTheme` ("light"/"dark"/"system"), whether `enableSystem` (follow OS preference), the `storageKey` persisted in localStorage, and the ordered `themes` list the toggle cycles through. Trim `themes` to `["light", "dark"]` to drop system-mode entirely, or reorder it to change the toggle's cycle order.
+- `src/providers/ThemeProvider.tsx` — thin wrapper around `next-themes`'s provider, reading from `theme-config.ts`. Mounted in **both** root layouts (`(marketing)/layout.tsx` and `(admin)/layout.tsx`, each with `suppressHydrationWarning` on `<html>` since `next-themes` sets the class before hydration) — add it to any new route-group root layout too.
+- `src/components/theme/ThemeToggle.tsx` — a generic icon button (Sun/Moon/Monitor) that cycles `themeConfig.themes` on click; lives under `components/` (not `_components/`) since it takes no `_content/` prop. It's already wired into `Navbar.tsx` (desktop + mobile menu) — move, restyle, or swap it for a dropdown/switch as needed, it only depends on `useTheme()` from `next-themes` and the config above.
+- Actual color values are unchanged from before this feature — they're the existing `:root`/`.dark` oklch custom properties in `globals.css`; edit those to change the palette in either mode.
 
 ### Environment variables — known inconsistency
 
