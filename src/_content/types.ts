@@ -59,6 +59,19 @@ export interface FaqContent {
 	items: FaqItem[];
 }
 
+export interface ReviewItem {
+	name: string;
+	role?: string;
+	rating: number; // 1-5
+	quote: string;
+}
+
+export interface ReviewContent {
+	title: string;
+	subtitle?: string;
+	items: ReviewItem[];
+}
+
 export type BlogCategory = 'Technology' | 'Design' | 'Development' | 'Lifestyle' | 'Business';
 
 export interface Author {

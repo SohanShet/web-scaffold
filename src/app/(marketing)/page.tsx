@@ -4,6 +4,8 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { getWebsiteSchema, getFaqSchema } from "@/lib/structured-data";
 import { FaqSection } from "@/_components/FaqSection";
 import { faqContent } from "@/_content/faq";
+import { ReviewSection } from "@/_components/ReviewSection";
+import { reviewContent } from "@/_content/reviews";
 
 export const metadata: Metadata = {
 	title: "Web Scaffold - Modern Next.js Boilerplate",
@@ -33,6 +35,7 @@ export default function Home() {
 				</Suspense>
 			</div>
 
+			<ReviewSection content={reviewContent} />
 			<FaqSection content={faqContent} />
 		</div>
 	);
