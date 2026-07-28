@@ -14,16 +14,129 @@ tags:
   - "Backend"
   - "TypeScript"
 image: "https://images.unsplash.com/photo-1558494949-ef526b01201b?q=80&w=2000&auto=format&fit=crop"
-readTime: "10 min read"
+readTime: "9 min read"
 featured: false
 ---
 
-Building an API that can scale with your application is a critical skill for backend developers. In this article, we will discuss key strategies for designing and implementing scalable APIs using Node.js and TypeScript.
+Building an API that can scale with your application is a critical skill for backend developers. Traffic growth exposes the same handful of weak points every time: unbounded queries, chatty clients, cold caches, and error responses that give consumers nothing to act on. This article walks through the strategies we lean on when designing and implementing scalable APIs with Node.js and TypeScript.
 
 ## REST vs. GraphQL
 
-Choosing the right architecture is the first step. REST has been the standard for years, but GraphQL offers a more flexible and efficient way to query data. Explore the tradeoffs of each approach before committing to one for a growing product.
+Choosing the right architecture is the first step. REST has been the standard for years, but GraphQL offers a more flexible and efficient way to query data. Neither is universally "better" — the right choice depends on how many clients you serve and how much their data needs diverge.
+
+| Concern | REST | GraphQL |
+|---|---|---|
+| Over/under-fetching | Common, unless you version endpoints heavily | Solved by design — clients ask for exactly what they need |
+| Caching | Simple, HTTP-native (CDN, ETags) | Harder — usually needs a dedicated cache layer |
+| Learning curve | Low, widely understood | Higher — schema, resolvers, query complexity |
+| Best fit | Public APIs, simple CRUD services | Multiple frontends with very different data shapes |
+
+> A good rule of thumb: start with REST. Reach for GraphQL only once you can point to a real client-diversity problem it solves — not because it's trendy.
+
+## Designing the Contract First
+
+Before writing a single handler, define the shape of your requests and responses. A shared TypeScript contract keeps the client and server honest and gives you compile-time safety across the boundary.
+
+```typescript
+// contracts/user.ts
+export interface CreateUserRequest {
+  email: string;
+  displayName: string;
+  role?: "member" | "admin";
+}
+
+export interface UserResponse {
+  id: string;
+  email: string;
+  displayName: string;
+  role: "member" | "admin";
+  createdAt: string;
+}
+
+export interface ApiError {
+  code: string;
+  message: string;
+  details?: Record<string, string>;
+}
+```
+
+Validate every incoming payload against this contract at runtime, not just at compile time — TypeScript types disappear once the code is compiled, but a malformed request from the network never respects your interfaces.
+
+```typescript
+// routes/users.ts
+import { z } from "zod";
+
+const createUserSchema = z.object({
+  email: z.string().email(),
+  displayName: z.string().min(2).max(60),
+  role: z.enum(["member", "admin"]).optional(),
+});
+
+app.post("/users", async (req, res) => {
+  const parsed = createUserSchema.safeParse(req.body);
+
+  if (!parsed.success) {
+    return res.status(400).json({
+      code: "VALIDATION_ERROR",
+      message: "Request body failed validation",
+      details: parsed.error.flatten().fieldErrors,
+    });
+  }
+
+  const user = await userService.create(parsed.data);
+  return res.status(201).json(user);
+});
+```
 
 ## Caching Strategies
 
-Caching is essential for performance. By caching frequently accessed data, you can reduce the load on your database and improve response times. Different strategies, from in-memory caching to CDN-backed edge caching, can each play a role in a resilient API platform.
+Caching is essential for performance. By caching frequently accessed data, you reduce load on your database and improve response times. Different strategies fit different layers of your stack:
+
+1. **In-memory caching** — a local LRU cache for hot, small datasets (config, feature flags). Fastest, but doesn't share state across instances.
+2. **Distributed caching** — Redis or Memcached in front of your database for query results and computed aggregates. Shared across every instance, with a TTL you control.
+3. **CDN / edge caching** — for public, cacheable `GET` responses. Push the response as close to the user as possible and let the origin server rest.
+4. **HTTP caching headers** — `ETag` and `Cache-Control` let clients and intermediate proxies skip the round trip entirely when nothing has changed.
+
+Layering these together — rather than picking just one — is what actually makes a read-heavy API hold up under load.
+
+## Rate Limiting and Pagination
+
+Unbounded endpoints are the fastest way to turn one noisy client into an outage for everyone else. Two defenses pay for themselves immediately: rate limiting and cursor-based pagination.
+
+```typescript
+// middleware/rate-limit.ts
+import rateLimit from "express-rate-limit";
+
+export const apiLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 100,            // limit each API key to 100 requests per window
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req) => req.header("x-api-key") ?? req.ip,
+});
+```
+
+Prefer cursor-based pagination (`?cursor=abc123&limit=20`) over offset-based pagination (`?page=4&limit=20`) once a table grows past a few hundred thousand rows — offsets force the database to scan and discard every row before the page you asked for, and results shift under you as data changes between requests.
+
+## Observability
+
+You cannot scale what you cannot see. At minimum, every service should expose:
+
+- Structured, request-scoped logs (include a request ID on every line)
+- Latency and error-rate metrics per route, broken out by status code
+- Distributed traces across service boundaries, so a slow downstream call is obvious rather than a mystery
+
+## Pre-Launch Checklist
+
+Before shipping a new API surface to production traffic, walk through this list:
+
+- [ ] Every endpoint validates input at runtime, not just at the type level
+- [ ] Error responses follow one consistent shape across the whole API
+- [ ] Expensive or unbounded queries are paginated
+- [ ] A rate limit exists on every public-facing route
+- [ ] Read-heavy endpoints have a caching layer in front of the database
+- [ ] Logs, metrics, and traces exist for every route before it takes real traffic
+
+## Conclusion
+
+Scalability isn't a single technology decision — it's a series of small, boring defaults applied consistently: validate inputs, cache reads, paginate lists, rate-limit writes, and instrument everything. Get those right early, and the architecture debates matter a lot less than they seem to at the start.

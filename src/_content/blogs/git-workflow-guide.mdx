@@ -15,7 +15,7 @@ tags:
   - "Collaboration"
   - "Code Review"
 image: "https://images.unsplash.com/photo-1556075798-4825dfaaf498?w=800&h=192&fit=crop"
-readTime: "4 min read"
+readTime: "7 min read"
 featured: true
 ---
 
@@ -30,11 +30,53 @@ This is a lightweight guide you can adopt in a day and iterate on later.
 - Open a pull request early and ask for review.
 - Merge back to `main` once tests pass.
 
+```bash
+# start a new unit of work
+git checkout main
+git pull origin main
+git checkout -b feat/checkout-retry-logic
+
+# work, commit in small chunks
+git add src/checkout/retry.ts
+git commit -m "feat: retry failed checkout requests with backoff"
+
+# stay current with main before opening a PR
+git fetch origin
+git rebase origin/main
+
+# push and open the PR
+git push -u origin feat/checkout-retry-logic
+```
+
+> Rebase your feature branch onto `main` before you open the PR, not after. A reviewer looking at a clean, linear diff finds the actual change in seconds; a reviewer looking at a diff tangled with three days of upstream merges gives up and rubber-stamps it.
+
+## Choosing a Branching Model
+
+Not every team needs the same amount of ceremony. Pick based on release cadence, not on what a blog post says is best practice.
+
+| Model | Best for | Tradeoff |
+|---|---|---|
+| Trunk-based (short branches, merge to `main` daily) | Teams shipping continuously, with strong CI | Requires feature flags for incomplete work |
+| GitHub Flow (branch, PR, merge, deploy) | Most product teams, web apps | Simple, but no built-in staging step |
+| Git Flow (`develop`, `release/*`, `hotfix/*`) | Teams shipping versioned software on a schedule | More overhead, more branches to keep in sync |
+
+If you're not sure which one you need, start with GitHub Flow. It's the workflow with the fewest rules to violate.
+
 ## Commit Message Tips
 
 - Start with a clear verb like `add`, `fix`, `remove`, or `refactor`.
-- Keep the first line short and specific.
+- Keep the first line short and specific — aim for under 72 characters.
 - Prefer multiple small commits over one giant `WIP`.
+- Explain *why* in the body when the *what* isn't obvious from the diff alone.
+
+```text
+fix: prevent duplicate webhook delivery on retry
+
+Stripe retries webhooks that time out, but our handler wasn't
+idempotent — a slow DB write could process the same event twice.
+Now we record the event ID before processing and short-circuit
+on replays.
+```
 
 ## PR Checklist
 
@@ -42,7 +84,26 @@ This is a lightweight guide you can adopt in a day and iterate on later.
 2. Link the issue or describe the user impact.
 3. Add tests, or explain why tests are not needed.
 4. Keep the diff small enough to review quickly.
+5. Resolve merge conflicts by rebasing, not by merging `main` back in.
+
+## Recovering From Common Mistakes
+
+Everyone force-pushes to the wrong branch or commits a secret eventually. A few commands cover most emergencies:
+
+```bash
+# undo the last commit but keep the changes staged
+git reset --soft HEAD~1
+
+# you committed to main by accident — move those commits to a branch
+git branch feat/oops-wrong-branch
+git reset --hard origin/main
+
+# find a commit you "lost" after a hard reset
+git reflog
+```
+
+`git reflog` is the safety net most people forget exists — as long as a commit was made, it's recoverable for a while even after a `reset --hard`, until Git eventually garbage-collects it.
 
 ## Wrap-Up
 
-The goal is not "perfect Git". It is fewer surprises and faster collaboration. Start simple, write down the rules, and improve them as your team grows.
+The goal is not "perfect Git." It is fewer surprises and faster collaboration. Start simple, write the rules down somewhere the whole team can see them, and revisit the workflow only when it's actually causing friction — not on a schedule.
