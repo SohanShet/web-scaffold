@@ -2,7 +2,6 @@ import { Star } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Section } from './Section';
 import type { ReviewContent } from '@/_content/types';
-import { cn } from '@/lib/utils';
 
 interface ReviewSectionProps {
 	content: ReviewContent;
@@ -11,17 +10,20 @@ interface ReviewSectionProps {
 function StarRating({ rating }: { rating: number }) {
 	return (
 		<div className="flex items-center gap-0.5" aria-label={`${rating} out of 5 stars`}>
-			{Array.from({ length: 5 }).map((_, i) => (
-				<Star
-					key={i}
-					className={cn(
-						'size-4',
-						i < rating
-							? 'fill-primary text-primary'
-							: 'fill-transparent text-muted-foreground/30'
-					)}
-				/>
-			))}
+			{Array.from({ length: 5 }).map((_, i) => {
+				const fill = Math.min(Math.max(rating - i, 0), 1) * 100;
+				return (
+					<span key={i} className="relative inline-block size-4">
+						<Star className="absolute inset-0 size-4 fill-transparent text-muted-foreground/30" />
+						<span
+							className="absolute inset-0 overflow-hidden"
+							style={{ width: `${fill}%` }}
+						>
+							<Star className="size-4 fill-primary text-primary" />
+						</span>
+					</span>
+				);
+			})}
 		</div>
 	);
 }

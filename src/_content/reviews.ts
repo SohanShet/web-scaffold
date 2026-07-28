@@ -21,9 +21,16 @@ export const reviewContent: ReviewContent = {
 		{
 			name: 'Priya Nair',
 			role: 'Product Designer',
-			rating: 4,
+			rating: 4.5,
 			quote:
 				'Loved how easy it was to restyle without fighting the components. The theming setup is a nice touch.',
+		},
+		{
+			name: 'Jordan Blake',
+			role: 'Backend Engineer',
+			rating: 2.5,
+			quote:
+				'Solid foundation, though I had to rework the env variable setup to match our conventions.',
 		},
 	],
 };
