@@ -10,7 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 		lastModified: new Date(blog.updatedAt ?? blog.publishedAt ?? Date.now()),
 	}));
 
-	const routes = ["", "/blog", "/about", "/contact"].map((route) => ({
+	const routes = ["", "/blog", "/about"].map((route) => ({
 		url: `${baseUrl}${route}`,
 		lastModified: new Date(),
 	}));

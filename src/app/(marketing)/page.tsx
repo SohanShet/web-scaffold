@@ -6,6 +6,7 @@ import { FaqSection } from "@/_components/FaqSection";
 import { faqContent } from "@/_content/faq";
 import { ReviewSection } from "@/_components/ReviewSection";
 import { reviewContent } from "@/_content/reviews";
+import { ContactSection } from "@/_components/ContactSection";
 
 export const metadata: Metadata = {
 	title: "Web Scaffold - Modern Next.js Boilerplate",
@@ -15,6 +16,10 @@ export const metadata: Metadata = {
 import { Suspense } from "react";
 import Loading from "@/_components/Loading";
 import BlogListClient from "@/_components/BlogListClient";
+// TEMPLATE SHOWCASE — see src/_components/ScaffoldShowcase.tsx for removal steps
+import { ScaffoldShowcase } from "@/_components/ScaffoldShowcase";
+// TEMPLATE SHOWCASE — see src/_components/ButtonShowcase.tsx for removal steps
+import { ButtonShowcase } from "@/_components/ButtonShowcase";
 
 export default function Home() {
 	// Simulate an async operation/data fetch
@@ -29,6 +34,11 @@ export default function Home() {
 			<JsonLd data={getWebsiteSchema()} />
 			<JsonLd data={getFaqSchema(faqContent.items)} />
 
+			{/* TEMPLATE SHOWCASE START — delete this block to start from a blank canvas */}
+			<ScaffoldShowcase />
+			<ButtonShowcase />
+			{/* TEMPLATE SHOWCASE END */}
+
 			<div className="flex w-full flex-1 flex-col items-center justify-center">
 				<Suspense fallback={<Loading />}>
 					<BlogListClient blogsPromise={blogsPromise} />
@@ -36,6 +46,7 @@ export default function Home() {
 			</div>
 
 			<ReviewSection content={reviewContent} />
+			<ContactSection />
 			<FaqSection content={faqContent} />
 		</div>
 	);

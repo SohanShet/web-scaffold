@@ -20,7 +20,7 @@ export function Section({
 		<section
 			id={id}
 			className={cn(
-				"w-full py-16 md:py-20",
+				"py-16 md:py-20 w-full",
 				className
 			)}
 		>
@@ -28,7 +28,7 @@ export function Section({
 				className={cn(
 					fullWidth
 						? "w-full"
-						: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+						: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-16 xl:px-18",
 					containerClassName
 				)}
 			>

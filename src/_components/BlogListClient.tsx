@@ -11,12 +11,11 @@ export default function BlogList({ blogsPromise }: BlogListProps) {
 	const blogs = use(blogsPromise);
 
 	return (
-		<section className="w-full py-12 md:px-10 px-3" id="blogs">
-			<BlogCarousel
-				blogs={blogs}
-				title="Latest Blogs"
-				description="Check out our latest blog posts."
-			/>
-		</section>
+		<BlogCarousel
+			id="blogs"
+			blogs={blogs}
+			title="Latest Blogs"
+			description="Check out our latest blog posts."
+		/>
 	);
 }

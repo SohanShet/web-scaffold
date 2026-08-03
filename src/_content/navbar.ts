@@ -9,8 +9,7 @@ export const navbarContent: NavbarContent = {
 		{ label: 'Home', href: '/' },
 		{ label: 'About', href: '/about' },
 		{ label: 'Blog', href: '/blog' },
-		{ label: 'Buttons', href: '/buttons' },
-		{ label: 'Contact', href: '/contact' },
+		{ label: 'Contact', href: '/#contact' },
 	],
 	cta: {
 		label: 'Get Started',
