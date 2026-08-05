@@ -20,6 +20,8 @@ import BlogListClient from "@/_components/BlogListClient";
 import { ScaffoldShowcase } from "@/_components/ScaffoldShowcase";
 // TEMPLATE SHOWCASE — see src/_components/ButtonShowcase.tsx for removal steps
 import { ButtonShowcase } from "@/_components/ButtonShowcase";
+// TEMPLATE SHOWCASE — see src/_components/FormShowcase.tsx for removal steps
+import { FormShowcase } from "@/_components/FormShowcase";
 
 export default function Home() {
 	// Simulate an async operation/data fetch
@@ -37,6 +39,7 @@ export default function Home() {
 			{/* TEMPLATE SHOWCASE START — delete this block to start from a blank canvas */}
 			<ScaffoldShowcase />
 			<ButtonShowcase />
+			<FormShowcase />
 			{/* TEMPLATE SHOWCASE END */}
 
 			<div className="flex w-full flex-1 flex-col items-center justify-center">

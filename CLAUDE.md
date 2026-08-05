@@ -42,9 +42,10 @@ All copy/data lives here, decoupled from components, so it can later be swapped 
 
 - `src/_components/` — app-specific, content-aware composed components (Navbar, Footer, BlogCard, BlogCarousel, ContactSection, custom-buttons/*, Section, ScrollToTop, Loading). These typically take the `_content/` typed objects as props.
 - `src/components/` — generic/shared building blocks, split further by concern:
-  - `components/ui/` — shadcn-generated primitives (`button.tsx`, `carousel.tsx`, `breadcrumb.tsx`). Managed via `components.json` (style: new-york, base color neutral, icon lib lucide) — use `pnpm dlx shadcn@latest add <component>` to add more rather than hand-rolling them.
+  - `components/ui/` — shadcn-generated primitives (`button.tsx`, `carousel.tsx`, `breadcrumb.tsx`, `input.tsx`, `textarea.tsx`, `select.tsx`, `checkbox.tsx`, `switch.tsx`, `form.tsx`). Managed via `components.json` (style: new-york, base color neutral, icon lib lucide) — use `pnpm dlx shadcn@latest add <component>` to add more rather than hand-rolling them.
   - `components/seo/` — `JsonLd.tsx` (renders a `<script type="application/ld+json">`) and `MdxContent.tsx` (the default MDX element renderer overrides: table/pre/code/blockquote).
   - `components/feedback/` — `EmptyState.tsx`, `GlobalLoadingIndicator.tsx`.
+  - `components/form/` — `FormFields.tsx`, the reusable React Hook Form field wrappers (see "Forms" below).
 
 ### SEO stack
 
@@ -65,6 +66,15 @@ Dark mode is powered by `next-themes` (class strategy, matching the pre-existing
 - `src/providers/ThemeProvider.tsx` — thin wrapper around `next-themes`'s provider, reading from `theme-config.ts`. Mounted in **both** root layouts (`(marketing)/layout.tsx` and `(admin)/layout.tsx`, each with `suppressHydrationWarning` on `<html>` since `next-themes` sets the class before hydration) — add it to any new route-group root layout too.
 - `src/components/theme/ThemeToggle.tsx` — a generic icon button (Sun/Moon/Monitor) that cycles `themeConfig.themes` on click; lives under `components/` (not `_components/`) since it takes no `_content/` prop. It's already wired into `Navbar.tsx` (desktop + mobile menu) — move, restyle, or swap it for a dropdown/switch as needed, it only depends on `useTheme()` from `next-themes` and the config above.
 - Actual color values are unchanged from before this feature — they're the existing `:root`/`.dark` oklch custom properties in `globals.css`; edit those to change the palette in either mode.
+
+### Forms
+
+Stack: **React Hook Form** + **Zod** + `@hookform/resolvers/zod`, on top of shadcn's `form.tsx` primitives (`Form`, `FormField`, `FormItem`, `FormLabel`, `FormControl`, `FormDescription`, `FormMessage` — installed by hand in `src/components/ui/form.tsx` since the shadcn registry wasn't reachable when this was added; `textarea.tsx`/`select.tsx`/`checkbox.tsx`/`switch.tsx` were added the same way and are otherwise unmodified shadcn output).
+
+- `src/components/form/FormFields.tsx` — the reusable layer. Five field components — `TextField`, `TextareaField`, `SelectField`, `CheckboxField`, `SwitchField` — that each wrap `FormField`/`FormItem`/`FormLabel`/`FormControl`/`FormDescription`/`FormMessage` so a call site never touches that boilerplate directly. Every field takes `control`, `name`, `label`, `description`, `required` (renders a `*`), `disabled`, and `className`; `TextField`/`TextareaField` forward any remaining props straight to the underlying `Input`/`Textarea` (e.g. `type`, `placeholder`, `rows`); `SelectField` additionally takes `options: { label, value, disabled? }[]` and `placeholder`.
+- **Recommended pattern for a new form**: define a Zod object schema → `useForm({ resolver: zodResolver(schema), defaultValues })` → render `<Form {...form}><form onSubmit={form.handleSubmit(onSubmit)}>` → one `*Field` component per input → a submit button reading `form.formState.isSubmitting`. `src/_components/FormShowcase.tsx` (wired into the homepage, same removable-block convention as `ButtonShowcase.tsx`/`ScaffoldShowcase.tsx`) is a complete worked example — copy its shape for new forms.
+- **When to reach for the raw shadcn/RHF primitives instead of a `*Field` component**: anything not covered here (radio groups, date pickers, file uploads, multi-select, field arrays) or layouts the wrappers don't support (e.g. a checkbox with no label). Compose directly with `FormField`/`FormItem`/etc. in that case — the `*Field` components are a convenience layer, not the only sanctioned way to build a field, and there's no framework lock-in stopping you from dropping to the primitives for one input in an otherwise-wrapped form.
+- No date picker exists in the scaffold yet; if one is added later it should get its own `DateField` in `FormFields.tsx` rather than a bespoke one-off.
 
 ### Environment variables — known inconsistency
 
